@@ -57,3 +57,9 @@ Review identity/contact information, membership prices, legal notices and retent
 ## Media
 
 `public/library.webp` is an original AI-generated editorial library photograph. It depicts no actual person and is used as atmosphere, not as an image of Prof. Chairul Huda or his office. The CH monogram is a provisional typographic identity.
+
+## Bali visual direction
+
+The v2 design uses Balinese residential architecture as inspiration: limestone, dark teak, warm paper and terracotta. Homepage composition is photographic, with an asymmetric reading-room introduction and journal-style article rows. `public/bali-courtyard.webp` and `public/bali-study.webp` are original AI-generated architectural illustrations, visibly identified as illustrations, not photographs of the professor or his actual home. Layout, styles, and assets only; runtime data and authorization are unchanged.
+
+Real portrait: `public/chairul-huda.jpg` is the unmodified photograph of Chairul Huda published by Republika. Source: https://news.republika.co.id/berita/rw7cce451/kasus-ksp-sejahtera-bersama-bukan-penggelapan-dan-tppu-ini-kata-ahli . The original image is https://static.republika.co.id/uploads/images/inpicture_slide/dr-chairul-huda-sh-mh-dosen-umj-pakar-_160127132610-174.jpg . Source credits appear by the portrait. This public article does not provide an explicit reusable-image licence; rights remain with the rights holder. Replace with the professor's own authorized portrait when available.
