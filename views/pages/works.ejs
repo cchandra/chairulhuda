@@ -1,0 +1,14 @@
+<section class="page-intro container works-intro"><span class="eyebrow">KARYA & PUBLIKASI</span><h1>Jejak pemikiran<br><em>hukum pidana.</em></h1><p>Bibliografi terpilih yang menjadi dasar penataan topik website ini. Tautan mengarah ke penerbit, jurnal, atau pencatatan DOI.</p></section>
+<section class="container works-page">
+  <div class="works-heading"><span class="eyebrow">BIBLIOGRAFI TERPILIH</span><p>Disusun menurut tahun terbit. Daftar ini akan dilengkapi setelah verifikasi bibliografi dan persetujuan pengelola.</p></div>
+  <div class="works-list">
+    <% publications.forEach((publication,index)=>{ %>
+      <article class="work-entry">
+        <div class="work-year"><span><%= publication.year %></span><small><%= publication.kind %></small></div>
+        <div><h2><%= publication.title %></h2><p><%= publication.venue %></p></div>
+        <a href="<%= publication.url %>" target="_blank" rel="noopener noreferrer" aria-label="Buka sumber untuk <%= publication.title %>">Sumber <span aria-hidden="true">↗</span></a>
+      </article>
+    <% }) %>
+  </div>
+</section>
+<section class="works-themes"><div class="container"><div class="bali-section-title"><div><span class="eyebrow">PETA KAJIAN</span><h2>Rumpun pemikiran.</h2></div><a class="quiet-link" href="/pustaka">Buka pustaka <span aria-hidden="true">→</span></a></div><div class="theme-grid"><% researchAreas.forEach((area,index)=>{ %><article><span>0<%= index+1 %></span><h3><%= area.title %></h3><p><%= area.description %></p></article><% }) %></div></div></section>

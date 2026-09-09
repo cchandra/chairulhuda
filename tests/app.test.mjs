@@ -25,10 +25,11 @@ test('public routes, membership isolation, uploads, editorial approval and persi
   const post=(path,data,cookie='',origin=base)=>fetch(base+path,{method:'POST',headers:{Origin:origin,...(cookie?{Cookie:cookie}:{})},body:new URLSearchParams(data),redirect:'manual'});
   let admin,member,premiumSlug;
   await t.test('all public pages render, search and 404 work',async()=>{
-    for(const path of ['/','/tentang','/pustaka','/kelas','/profesional','/layanan','/privasi','/masuk','/daftar']){
+    for(const path of ['/','/karya','/tentang','/pustaka','/kelas','/profesional','/layanan','/privasi','/masuk','/daftar']){
       const res=await get(path);assert.equal(res.status,200,path);const html=await res.text();assert.match(html,/<!doctype html>/i);assert.doesNotMatch(html,/ReferenceError|TypeError/);
     }
     assert.match(await (await get('/pustaka?q=pertanggungjawaban')).text(),/Menata riset/);
+    assert.match(await (await get('/karya')).text(),/Pola Pemberatan Pidana/);
     assert.match(await (await get('/pustaka?q=zzzzzz')).text(),/Belum ada hasil/);
     assert.equal((await get('/tidak-ada')).status,404);
     assert.equal((await get('/library.webp')).status,200);
