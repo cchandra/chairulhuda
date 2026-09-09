@@ -11,6 +11,7 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 const production = process.env.NODE_ENV === 'production';
 const validBase = (()=> { try { const url = new URL(process.env.BASE_URL); return /^https?:$/.test(url.protocol) ? url.origin : ''; } catch { return ''; } })();
 const siteOrigin = validBase || 'http://localhost:3000';
+const siteVersion = process.env.APP_VERSION || '1.1.0';
 app.disable('x-powered-by');
 app.set('view engine','ejs');
 app.set('views',join(root,'views'));
@@ -29,6 +30,7 @@ app.use((req,res,next)=>{
   res.locals.user=req.user;
   res.locals.path=req.path;
   res.locals.contentKind=req.query.jenis||'';
+  res.locals.siteVersion=siteVersion;
   res.locals.topics=topics;
   res.locals.isPro=!!req.user&&(req.user.role==='admin'||new Date(req.user.membership_until)>new Date());
   res.locals.siteOrigin=siteOrigin;
