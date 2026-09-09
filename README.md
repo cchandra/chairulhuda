@@ -60,6 +60,6 @@ Review identity/contact information, membership prices, legal notices and retent
 
 ## Bali visual direction
 
-The design presents a digital academic study built around `public/ruang-study-chairul-huda.jpg`, the study image supplied for this website. White stone, dark teak and terracotta retain the Balinese architectural character. Publications use an indexed archive layout instead of generic landing-page cards. Layout, styles, and assets only; runtime data and authorization are unchanged.
+The design uses Balinese residential architecture as inspiration: white stone, dark teak and terracotta. Homepage composition is photographic, with an asymmetric study introduction and journal-style article rows. `public/bali-courtyard.webp` is an original architectural illustration. `public/ruang-study-chairul-huda.jpg` is the study image supplied for this website. Layout, styles, and assets only; runtime data and authorization are unchanged.
 
 Real portrait: `public/chairul-huda-2025.jpg` is the photograph of Chairul Huda giving expert testimony at the Constitutional Court on 15 October 2025. Source and photo credit: Humas MKRI, https://www.mkri.id/berita/ahli-pemohon-pasal-21-uu-tipikor-perlu-dirumuskan-ulang-23921 . Source credits appear by the portrait. Rights remain with the rights holder; replace with the professor's own authorized portrait when available.
