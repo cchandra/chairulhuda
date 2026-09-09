@@ -22,117 +22,121 @@ body.bali-site{background:var(--paper);color:var(--ink);font-family:Arial,Helvet
 @media(max-width:380px){.bali-wordmark{font-size:22px}.bali-site .nav{gap:12px}.bali-wordmark small{font-size:7px}.professor-portrait figcaption>span{font-size:21px}.professor-portrait figcaption>a{font-size:8px}.bali-hero-bottom>a{gap:6px}}
 @media(prefers-reduced-motion:reduce){.bali-hero-image{animation:none}.bali-hero-link span{transition:none}}
 
-/* Bali malam: volcanic stone, dark teak and aged bronze. */
-:root{--ink:#f0ece3;--paper:#171a17;--line:#4d4b42;--rust:#bd8955;--wood:#111310;--muted:#aaa69c}
+/* Bali terang: white stone, teak and terracotta. */
+:root{--ink:#272724;--paper:#fff;--line:#d7d8d2;--rust:#9b4f35;--wood:#332821;--muted:#696b67}
 body.bali-site{background:
-radial-gradient(circle at 88% 8%,#37312655 0,transparent 25%),
-radial-gradient(circle at 10% 45%,#2a2d273d 0,transparent 28%),
-#171a17;color:var(--ink)}
-.bali-site h1,.bali-site h2,.bali-site h3,.bali-site a{color:#f0ece3}
-.bali-site p{color:#aaa69c}
-.bali-site em{color:#d0a06a}
-.bali-site .eyebrow{color:#c29260}
-.bali-site .header{background:#121512f2;border-bottom-color:#86705255;box-shadow:0 12px 45px #080a0870}
-.bali-wordmark{color:#f3eee4}
-.bali-wordmark small{color:#9e978a}
-.bali-site .nav nav>a:after{background:#c79661}
-.bali-site .nav-divider{background:#655d50}
-.bali-site .nav .button,.bali-site .button.outline{border-color:#9b7953;color:#d7aa76}
-.bali-site .nav .button:hover,.bali-site .button.outline:hover{background:#a87543;color:#111310}
-.bali-site .button{background:#a87543;border-color:#a87543;color:#12130f}
-.bali-site .button:hover{background:#c4935d}
-.bali-site .button.cream{background:#b88650;border-color:#b88650;color:#111310}
-.bali-site .text-link,.quiet-link{color:#d0a06a}
-.quiet-link{border-color:#8f704d}
-.quiet-link:hover{color:#f0c38d;border-color:#f0c38d}
-.bali-site .menu-toggle{color:#eee9df;border-color:#716451}
+linear-gradient(135deg,#eeefeb55 25%,transparent 25%) 0 0/32px 32px,
+linear-gradient(315deg,#eeefeb35 25%,transparent 25%) 0 0/32px 32px,
+#fff;color:var(--ink)}
+.bali-site main{background:#fff}
+.bali-site h1,.bali-site h2,.bali-site h3,.bali-site a{color:#272724}
+.bali-site p{color:#696b67}
+.bali-site em{color:#9b4f35}
+.bali-site .eyebrow{color:#9b4f35}
+.bali-site .header{background:#fffffff5;border-bottom-color:#d8d8d1;box-shadow:0 8px 30px #25251f0a}
+.bali-wordmark{color:#2e2925}
+.bali-wordmark small{color:#716a64}
+.bali-site .nav nav>a:after{background:#9b4f35}
+.bali-site .nav-divider{background:#d6d4ce}
+.bali-site .nav .button{border-color:#86513d;color:#824630}
+.bali-site .nav .button:hover{background:#824630;color:#fff}
+.bali-site .button{background:#914a32;border-color:#914a32;color:#fff}
+.bali-site .button:hover{background:#713622}
+.bali-site .button.outline{background:transparent;border-color:#9d897d;color:#49372e}
+.bali-site .button.outline:hover{background:#f0f1ee}
+.bali-site .button.cream{background:#fff;color:#49372e;border-color:#fff}
+.bali-site .text-link,.quiet-link{color:#914a32}
+.quiet-link{border-color:#ad806d}
+.quiet-link:hover{color:#5e2d1e;border-color:#5e2d1e}
+.bali-site .menu-toggle{color:#39332f;border-color:#b7aaa1}
 
-.bali-hero{border-bottom:1px solid #9d805a55}
-.bali-hero-shade{background:linear-gradient(90deg,#080a08e8,#0c0e0cb8 46%,#0b0d0b52 78%),linear-gradient(0deg,#0a0c0aaf,transparent 35%)}
-.bali-hero h1 em{color:#ddb17c}
-.professor-portrait{background:#171a17;border:1px solid #92734e;box-shadow:0 28px 80px #050605aa;padding:11px 11px 0}
-.professor-portrait>img{filter:saturate(.84) contrast(1.05)}
-.professor-portrait figcaption{color:#f0ece3}
-.professor-portrait small{color:#a99c89}
-.professor-portrait figcaption>a{color:#c59a68}
+.bali-hero{border-bottom:1px solid #8e674b55}
+.bali-hero-shade{background:linear-gradient(90deg,#191713cc,#19171378 48%,#19171318 80%),linear-gradient(0deg,#17130e77,transparent 32%)}
+.bali-hero h1 em{color:#f0c999}
+.professor-portrait{background:#fff;border:1px solid #d7d2ca;box-shadow:0 25px 70px #17130d52;padding:11px 11px 0}
+.professor-portrait>img{filter:saturate(.9) contrast(1.03)}
+.professor-portrait figcaption{color:#322b26}
+.professor-portrait small{color:#716a63}
+.professor-portrait figcaption>a{color:#8c513a}
 
-.veranda{position:relative}
-.veranda:before{content:"";position:absolute;left:0;right:0;top:0;border-top:1px solid #8e76523d}
-.veranda-image img{box-shadow:20px 20px 0 #252721,0 30px 75px #07080780;filter:saturate(.75) contrast(1.05)}
-.veranda-image figcaption,.bali-image-credit{color:#8f8a80}
-.bali-readings{background:#20231f;border-block-color:#75664f66}
-.reading-list{border-color:#71624e}
-.reading-entry{border-color:#615a4c}
-.reading-meta,.reading-access,.reading-author{color:#989185}
-.reading-number,.reading-topic,.topic-order{color:#c18b56}
-.reading-access.premium{color:#d7a870;border-color:#9c7049}
-.reading-open{border-color:#6e6555;color:#d5a66f}
-.reading-open:hover{background:#a87543;border-color:#a87543;color:#111310}
-.bali-index{position:relative}
-.bali-search{border-color:#766347}
-.bali-search input{color:#eee9df}
-.bali-search input::placeholder{color:#77766f}
-.bali-search button,.bali-topic-list>a>span:last-child{color:#c7945d}
-.bali-topic-list>a{border-color:#4e4d45}
-.bali-practice{background:linear-gradient(120deg,#35251e,#241d19);border-block:1px solid #97724b55}
-.bali-practice .eyebrow{color:#d1a06c}
-.bali-practice h2 em{color:#e0b782}
-.bali-practice-copy p{color:#c7b9a9}
-.practice-lines{color:#ded4c8}
-.practice-lines span{border-color:#bb8e5a42}
+.veranda{position:relative;background:#fff}
+.veranda:before,.bali-index:before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:repeating-linear-gradient(90deg,#9b4f35 0 18px,#fff 18px 27px,#3d332d 27px 45px,#fff 45px 54px);opacity:.38}
+.veranda-image img{box-shadow:18px 18px 0 #e7e8e3,0 25px 65px #302b251f;filter:saturate(.82) contrast(1.03)}
+.veranda-image figcaption,.bali-image-credit{color:#77756f}
+.bali-readings{background:#f1f2ef;border-block-color:#d5d7d1}
+.reading-list{border-color:#aaa49a}
+.reading-entry{border-color:#d0d1cb}
+.reading-meta,.reading-access,.reading-author{color:#72736e}
+.reading-number,.reading-topic,.topic-order{color:#9b4f35}
+.reading-access.premium{color:#8a4029;border-color:#b56f54}
+.reading-open{border-color:#aaa49b;color:#8f4932}
+.reading-open:hover{background:#914a32;border-color:#914a32;color:#fff}
+.bali-index{position:relative;background:#fff}
+.bali-search{border-color:#85776e}
+.bali-search input{color:#272724}
+.bali-search input::placeholder{color:#8c8d88}
+.bali-search button,.bali-topic-list>a>span:last-child{color:#914a32}
+.bali-topic-list>a{border-color:#d9dad5}
+.bali-practice{background:#3b302a;color:#fff;padding-block:75px;border-block:7px solid #a25a3d}
+.bali-practice .eyebrow{color:#efbc8e}
+.bali-practice h2,.bali-practice h2 em{color:#fff}
+.bali-practice-copy p{color:#ddd5cd}
+.practice-lines{color:#f1e9e1}
+.practice-lines span{border-color:#c7977855}
 
-.bali-site footer{background:#0d100e;border-top:1px solid #806b4d55}
-.bali-site footer .bali-wordmark{color:#f1ede5}
-.bali-site footer .bali-wordmark small,.bali-site .footer-grid p{color:#918d84}
-.bali-site .footer-grid h3{color:#c3945f}
-.bali-site .footer-grid>div:not(:first-child)>a{color:#aaa59b}
-.bali-site .footer-grid a:hover{color:#e0b67f}
-.bali-site .footer-bottom{color:#77766f;border-color:#58524655}
+.bali-site footer{background:#292622;color:#f1efeb;border-top:0}
+.bali-site footer .bali-wordmark{color:#fff}
+.bali-site footer .bali-wordmark small,.bali-site .footer-grid p{color:#aaa49c}
+.bali-site .footer-grid h3{color:#d4a27d}
+.bali-site .footer-grid>div:not(:first-child)>a{color:#c8c3bc}
+.bali-site .footer-grid a:hover{color:#fff}
+.bali-site .footer-bottom{color:#8f8b85;border-color:#625b5555}
 
-/* Dark editorial surfaces across the library, accounts and administration. */
-.bali-site .page-intro{border-bottom:1px solid #5a554955}
-.bali-site .page-intro p,.bali-site .article-lead{color:#aaa69c}
-.bali-site .library-filters,.bali-site .empty-state,.bali-site .class-coming,.bali-site .auth-card,.bali-site .admin-inquiry{background:#232620;border-color:#514d42}
+/* White editorial surfaces across the library, accounts and administration. */
+.bali-site .page-intro{background:#fff;border-bottom:1px solid #e0e1dc}
+.bali-site .page-intro p,.bali-site .article-lead{color:#696b67}
+.bali-site .library-filters,.bali-site .empty-state,.bali-site .class-coming,.bali-site .auth-card,.bali-site .admin-inquiry{background:#f2f3f0;border-color:#d6d8d2}
 .bali-site .library-filters input,.bali-site .library-filters select,
 .bali-site .form input:not([type=checkbox]),.bali-site .form select,.bali-site .form textarea,
-.bali-site .inline-form input,.bali-site .inline-form select{background:#151815;border-color:#595447;color:#ebe6dc}
-.bali-site input::placeholder,.bali-site textarea::placeholder{color:#74746d}
+.bali-site .inline-form input,.bali-site .inline-form select{background:#fff;border-color:#c8cac4;color:#302d2a}
+.bali-site input::placeholder,.bali-site textarea::placeholder{color:#92938f}
 .bali-site .result-line,.bali-site .article-layout aside p,.bali-site .muted,.bali-site .back-link,
 .bali-site .author-line small,.bali-site .share-button,.bali-site .editorial-note,
 .bali-site .about-image>span,.bali-site .class-topics span,.bali-site .class-topics small,
 .bali-site .form .check,.bali-site .form-note,.bali-site .form label small,.bali-site .pricing-note,
-.bali-site td small,.bali-site .admin-inquiry small{color:#969187}
-.bali-site .prose p{color:#c7c1b6}
+.bali-site td small,.bali-site .admin-inquiry small{color:#747570}
+.bali-site .prose p{color:#4f514e}
 .bali-site .article-layout aside hr,.bali-site .author-line,.bali-site .editorial-note,
-.bali-site .class-topics>div,.bali-site .form-section,.bali-site .account-details .request-row{border-color:#514d42}
-.bali-site .author-line .avatar,.bali-site .badge,.bali-site .admin-tabs span{background:#292a24;border-color:#6f5d45;color:#d3a16a}
-.bali-site .source-box,.bali-site .paywall{background:#242720;border-color:#6c5940}
-.bali-site .source-box{border-left-color:#b47e49}
-.bali-site .about-image img{box-shadow:18px 18px 0 #252721;filter:saturate(.84) contrast(1.05)}
-.bali-site .form label{color:#c9c2b7}
-.bali-site .pro-page{background:linear-gradient(120deg,#111411,#25231d);border-block:1px solid #826d4f55}
-.bali-site .pro-page h1{color:#f0ece3}
-.bali-site .pro-page p{color:#aaa69c}
-.bali-site .price-card{border-color:#514d42}
-.bali-site .price-card.featured{background:#292820;color:#f0ece3}
-.bali-site .price-card.featured .eyebrow{color:#d0a06a}
-.bali-site .price-card.featured p{color:#aaa69c}
-.bali-site .price-card.featured .button{background:#b88650;color:#111310;border-color:#b88650}
+.bali-site .class-topics>div,.bali-site .form-section,.bali-site .account-details .request-row{border-color:#d4d6d0}
+.bali-site .author-line .avatar,.bali-site .badge,.bali-site .admin-tabs span{background:#eeefeb;border-color:#cbc8c0;color:#8c4932}
+.bali-site .source-box,.bali-site .paywall{background:#f1f2ef;border-color:#cbb7a8}
+.bali-site .source-box{border-left-color:#9b4f35}
+.bali-site .about-image img{box-shadow:16px 16px 0 #e7e8e3;filter:saturate(.9) contrast(1.03)}
+.bali-site .form label{color:#494a46}
+.bali-site .pro-page{background:#39302a;border-block:7px solid #9d563b}
+.bali-site .pro-page h1{color:#fff}
+.bali-site .pro-page p{color:#d5cec7}
+.bali-site .price-card{background:#fff;border-color:#d6d6cf}
+.bali-site .price-card.featured{background:#efefeb;color:#272724}
+.bali-site .price-card.featured .eyebrow{color:#9b4f35}
+.bali-site .price-card.featured p{color:#696b67}
+.bali-site .price-card.featured .button{background:#914a32;color:#fff;border-color:#914a32}
 .bali-site .price-card ul,.bali-site .price-card.featured ul,.bali-site .pricing-grid,
 .bali-site .service-grid,.bali-site .service-card,.bali-site .admin-tabs,.bali-site .table-scroll,
-.bali-site td{border-color:#514d42}
-.bali-site .price-card li:before,.bali-site .service-card>span{color:#c7955d}
-.bali-site .auth-sign{color:#34352f}
-.bali-site th{background:#242720;color:#ba8a58}
-.bali-site .admin-inquiry{background:#20231f}
-.bali-site .text-button{color:#c49663}
-.bali-site .material-media{background:#0d100e}
-.bali-site option{background:#171a17;color:#ebe6dc}
+.bali-site td{border-color:#d6d7d2}
+.bali-site .price-card li:before,.bali-site .service-card>span{color:#9b4f35}
+.bali-site .auth-sign{color:#e4e5e0}
+.bali-site th{background:#efefeb;color:#7e4935}
+.bali-site .admin-inquiry{background:#f6f6f3}
+.bali-site .text-button{color:#87452f}
+.bali-site .material-media{background:#292622}
+.bali-site option{background:#fff;color:#302d2a}
 
 @media(max-width:960px){
-  .bali-site .nav nav{background:#151815;border-color:#5c5345;box-shadow:0 20px 35px #070807cc}
+  .bali-site .nav nav{background:#fff;border-color:#ddd8d1;box-shadow:0 20px 35px #2a251f1f}
 }
 @media(max-width:650px){
-  .veranda-image img{box-shadow:12px 12px 0 #252721,0 24px 55px #07080780}
-  .bali-site .about-image img{box-shadow:10px 10px 0 #252721}
+  .veranda-image img{box-shadow:10px 10px 0 #e7e8e3,0 20px 45px #302b2519}
+  .bali-site .about-image img{box-shadow:9px 9px 0 #e7e8e3}
+  .bali-practice,.bali-site .pro-page{border-width:4px}
 }
