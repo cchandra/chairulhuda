@@ -132,6 +132,16 @@ linear-gradient(315deg,#eeefeb35 25%,transparent 25%) 0 0/32px 32px,
 .bali-site .material-media{background:#292622}
 .bali-site option{background:#fff;color:#302d2a}
 
+/* Accessible contrast on every dark editorial surface. */
+.bali-site .bali-hero h1{color:#fff}
+.bali-site .bali-hero .bali-hero-link,
+.bali-site .bali-practice .bali-hero-link{color:#fff2d9}
+.bali-site footer .brand.light,
+.bali-site footer .footer-bottom a{color:#f1efeb}
+.bali-site .footer-bottom{color:#a8a49e}
+.bali-site .class-topics span,
+.bali-site .class-topics small{color:#696b67}
+
 @media(max-width:960px){
   .bali-site .nav nav{background:#fff;border-color:#ddd8d1;box-shadow:0 20px 35px #2a251f1f}
 }
