@@ -140,3 +140,6 @@ linear-gradient(315deg,#eeefeb35 25%,transparent 25%) 0 0/32px 32px,
   .bali-site .about-image img{box-shadow:9px 9px 0 #e7e8e3}
   .bali-practice,.bali-site .pro-page{border-width:4px}
 }
+
+/* The central liability term remains intact at every viewport width. */
+.bali-hero-grid h1 em{display:inline-block;font-size:.78em}

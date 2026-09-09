@@ -48,7 +48,7 @@ app.use((req,res,next)=>{
   }
   next();
 });
-function render(res,view,title,data={},status=200){res.status(status).render('layout',{view,title,description:'Pustaka hukum pidana, pemikiran, dan pembelajaran. Pengetahuan terbuka untuk publik dan ruang profesional untuk praktisi.',...data});}
+function render(res,view,title,data={},status=200){res.status(status).render('layout',{view,title,description:'Kajian Prof. Chairul Huda mengenai tindak pidana, kesalahan, pertanggungjawaban pidana, putusan pengadilan, dan pemidanaan.',...data});}
 function rateLimit(req,res,key,max=10){
   const id=key+':'+tokenHash(req.socket.remoteAddress||'unknown');
   db.prepare('DELETE FROM rate_limits WHERE expires_at<?').run(Date.now());
