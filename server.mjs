@@ -28,6 +28,7 @@ app.use((req,res,next)=>{
   req.user=token?db.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=? AND s.expires_at>?').get(tokenHash(token),Date.now()):null;
   res.locals.user=req.user;
   res.locals.path=req.path;
+  res.locals.contentKind=req.query.jenis||'';
   res.locals.topics=topics;
   res.locals.isPro=!!req.user&&(req.user.role==='admin'||new Date(req.user.membership_until)>new Date());
   res.locals.siteOrigin=siteOrigin;
