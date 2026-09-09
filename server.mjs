@@ -11,7 +11,7 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 const production = process.env.NODE_ENV === 'production';
 const validBase = (()=> { try { const url = new URL(process.env.BASE_URL); return /^https?:$/.test(url.protocol) ? url.origin : ''; } catch { return ''; } })();
 const siteOrigin = validBase || 'http://localhost:3000';
-const siteVersion = process.env.APP_VERSION || '1.1.0';
+const siteVersion = process.env.APP_VERSION || '1.1.1';
 app.disable('x-powered-by');
 app.set('view engine','ejs');
 app.set('views',join(root,'views'));
