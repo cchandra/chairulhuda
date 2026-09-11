@@ -34,7 +34,8 @@ The app reads environment variables from the hosting platform. `.env.example` is
 - Server-enforced premium article, document and media protection, with membership expiry checked on every request.
 - Administrator manual membership activation/expiry and inquiry status management.
 - Same-origin mutation checks, request limits, upload limits/signature checks, CSP, escaped output, and private storage outside public assets.
-- SEO page titles/descriptions, sitemap, robots, accessible navigation/forms, keyboard focus and reduced-motion support.
+- SEO page titles/descriptions, canonical links, Open Graph/Twitter card tags, Person/Article structured data (JSON-LD), sitemap with per-article `lastmod`, an RSS feed at `/rss.xml`, robots, accessible navigation/forms, keyboard focus and reduced-motion support.
+- Gzip response compression and paginated library search (12 results per page) for predictable performance as content grows.
 
 ## Editorial and launch status
 

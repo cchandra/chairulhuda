@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import compression from 'compression';
 import { randomBytes, createHash } from 'node:crypto';
 import { openSync, readSync, closeSync, unlinkSync } from 'node:fs';
 import { join, basename, extname } from 'node:path';
@@ -20,6 +21,7 @@ app.use((req,res,next)=>{
   if(production) res.set('Strict-Transport-Security','max-age=31536000');
   next();
 });
+app.use(compression());
 app.use(express.static(join(root,'public'),{maxAge:production?'1d':0}));
 app.use(express.urlencoded({extended:false,limit:'200kb'}));
 const tokenHash=t=>createHash('sha256').update(t).digest('hex');
@@ -34,6 +36,9 @@ app.use((req,res,next)=>{
   res.locals.isPro=!!req.user&&(req.user.role==='admin'||new Date(req.user.membership_until)>new Date());
   res.locals.siteOrigin=siteOrigin;
   res.locals.contactEmail=process.env.CONTACT_EMAIL||'';
+  res.locals.canonical=siteOrigin+req.path;
+  res.locals.ogImage=siteOrigin+'/bali-courtyard.webp';
+  res.locals.structuredData=null;
   res.locals.error=null;
   res.locals.values={};
   res.locals.message=null;
@@ -68,19 +73,27 @@ function session(req,res,id){
 }
 const field=(body,name,max=500)=>typeof body[name]==='string'?body[name].trim().slice(0,max):'';
 const validEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)&&e.length<=254;
+const likeTerm=s=>`%${s.replace(/[\\%_]/g,'\\$&')}%`;
+const jsonLd=data=>`<script type="application/ld+json">${JSON.stringify(data).replace(/</g,'\\u003c')}</script>`;
+const escapeXml=s=>s.replace(/[<>&'"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'})[c]);
 const listColumns='id,slug,title,summary,topic,kind,access,author,updated_at';
+const libraryPerPage=12;
 app.get('/',(req,res)=>render(res,'home','Prof. Chairul Huda — Pusat Ilmu Hukum Pidana',{materials:db.prepare(`SELECT ${listColumns} FROM materials WHERE status='published' ORDER BY created_at DESC,id DESC LIMIT 3`).all(),publications:selectedPublications.slice(0,5)}));
 app.get('/karya',(req,res)=>render(res,'works','Karya & Publikasi Prof. Chairul Huda',{publications:selectedPublications}));
 app.get('/pustaka',(req,res)=>{
   const q=typeof req.query.q==='string'?req.query.q.slice(0,150):'';
   const topic=topics.includes(req.query.topik)?req.query.topik:'';
   const kind=['Artikel','Bedah Putusan','Kelas','Makalah'].includes(req.query.jenis)?req.query.jenis:'';
+  const page=Math.max(1,Number.parseInt(req.query.page,10)||1);
   const conditions=["status='published'"]; const args=[];
-  if(q){conditions.push('(title LIKE ? OR summary LIKE ? OR topic LIKE ?)');args.push(...Array(3).fill(`%${q}%`));}
+  if(q){conditions.push("(title LIKE ? ESCAPE '\\' OR summary LIKE ? ESCAPE '\\' OR topic LIKE ? ESCAPE '\\')");args.push(...Array(3).fill(likeTerm(q)));}
   if(topic){conditions.push('topic=?');args.push(topic);}
   if(kind){conditions.push('kind=?');args.push(kind);}
-  const materials=db.prepare(`SELECT ${listColumns} FROM materials WHERE ${conditions.join(' AND ')} ORDER BY updated_at DESC,id DESC`).all(...args);
-  render(res,'library',kind==='Bedah Putusan'?'Bedah Putusan':'Pustaka Ilmu Pidana',{materials,q,topic,kind});
+  const where=conditions.join(' AND ');
+  const total=db.prepare(`SELECT COUNT(*) c FROM materials WHERE ${where}`).get(...args).c;
+  const totalPages=Math.max(1,Math.ceil(total/libraryPerPage));
+  const materials=db.prepare(`SELECT ${listColumns} FROM materials WHERE ${where} ORDER BY updated_at DESC,id DESC LIMIT ? OFFSET ?`).all(...args,libraryPerPage,(Math.min(page,totalPages)-1)*libraryPerPage);
+  render(res,'library',kind==='Bedah Putusan'?'Bedah Putusan':'Pustaka Ilmu Pidana',{materials,q,topic,kind,page:Math.min(page,totalPages),totalPages,total});
 });
 app.get('/pustaka/:slug',(req,res)=>{
   const material=db.prepare("SELECT * FROM materials WHERE slug=? AND status='published'").get(req.params.slug);
@@ -88,7 +101,8 @@ app.get('/pustaka/:slug',(req,res)=>{
   const locked=material.access==='premium'&&!res.locals.isPro;
   if(locked){material.body='';material.attachment=null;}
   const saved=!!req.user&&!!db.prepare('SELECT 1 FROM bookmarks WHERE user_id=? AND material_id=?').get(req.user.id,material.id);
-  render(res,'article',material.title,{material,locked,saved,description:material.summary});
+  const structuredData=jsonLd({'@context':'https://schema.org','@type':'Article',headline:material.title,description:material.summary,datePublished:new Date(material.created_at+'Z').toISOString(),dateModified:new Date(material.updated_at+'Z').toISOString(),isAccessibleForFree:!locked,inLanguage:'id',mainEntityOfPage:siteOrigin+'/pustaka/'+material.slug,author:material.author==='Tim Editorial'?{'@type':'Organization',name:'Tim Editorial — Chairul Huda'}:{'@type':'Person',name:material.author},publisher:{'@type':'Organization',name:'Chairul Huda — Pusat Ilmu Hukum Pidana'}});
+  render(res,'article',material.title,{material,locked,saved,description:material.summary,structuredData});
 });
 app.get('/unduh/:id',loginOptionalDownload);
 app.get('/media/:id',(req,res)=>{
@@ -112,7 +126,7 @@ app.post('/simpan/:id',loginRequired,(req,res)=>{
   db.prepare(exists?'DELETE FROM bookmarks WHERE user_id=? AND material_id=?':'INSERT INTO bookmarks(user_id,material_id) VALUES(?,?)').run(req.user.id,material.id);
   res.redirect(`/pustaka/${material.slug}`);
 });
-app.get('/tentang',(req,res)=>render(res,'about','Tentang Prof. Chairul Huda'));
+app.get('/tentang',(req,res)=>render(res,'about','Tentang Prof. Chairul Huda',{structuredData:jsonLd({'@context':'https://schema.org','@type':'Person',name:'Chairul Huda',jobTitle:'Ahli Hukum Pidana dan Akademisi',url:siteOrigin+'/tentang',image:siteOrigin+'/chairul-huda-2025.jpg',sameAs:['https://www.mkri.id/berita/ahli-pemohon-pasal-21-uu-tipikor-perlu-dirumuskan-ulang-23921'],description:'Ahli hukum pidana dan akademisi, dikenal atas teori pemisahan tindak pidana dan pertanggungjawaban pidana.'})}));
 app.get('/kelas',(req,res)=>render(res,'classes','Kelas & Diskusi',{materials:db.prepare(`SELECT ${listColumns} FROM materials WHERE status='published' AND kind='Kelas' ORDER BY id DESC`).all()}));
 app.get('/profesional',(req,res)=>render(res,'professional','Akses Profesional untuk Lawyer'));
 app.get('/layanan',(req,res)=>render(res,'services','Layanan Ahli'));
@@ -202,13 +216,20 @@ app.post('/admin/permintaan/:id',adminRequired,(req,res)=>{
 app.get('/health',(req,res)=>{db.prepare('SELECT 1').get();res.json({status:'ok'});});
 app.get('/robots.txt',(req,res)=>res.type('text').send(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /akun\nDisallow: /masuk\nDisallow: /daftar\nSitemap: ${siteOrigin}/sitemap.xml`));
 app.get('/sitemap.xml',(req,res)=>{
-  const paths=['/','/karya','/tentang','/pustaka','/kelas','/profesional','/layanan',...db.prepare("SELECT slug FROM materials WHERE status='published'").all().map(m=>'/pustaka/'+m.slug)];
-  res.type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+paths.map(p=>`<url><loc>${siteOrigin}${p}</loc></url>`).join('')+'</urlset>');
+  const staticPaths=['/','/karya','/tentang','/pustaka','/kelas','/profesional','/layanan'];
+  const materials=db.prepare("SELECT slug,updated_at FROM materials WHERE status='published'").all();
+  const entries=[...staticPaths.map(p=>({loc:p})),...materials.map(m=>({loc:'/pustaka/'+m.slug,lastmod:m.updated_at.slice(0,10)}))];
+  res.type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries.map(e=>`<url><loc>${siteOrigin}${e.loc}</loc>${e.lastmod?`<lastmod>${e.lastmod}</lastmod>`:''}</url>`).join('')+'</urlset>');
+});
+app.get('/rss.xml',(req,res)=>{
+  const materials=db.prepare(`SELECT ${listColumns},created_at FROM materials WHERE status='published' ORDER BY created_at DESC,id DESC LIMIT 30`).all();
+  const items=materials.map(m=>`<item><title>${escapeXml(m.title)}</title><link>${siteOrigin}/pustaka/${m.slug}</link><guid>${siteOrigin}/pustaka/${m.slug}</guid><description>${escapeXml(m.summary)}</description><pubDate>${new Date(m.created_at+'Z').toUTCString()}</pubDate></item>`).join('');
+  res.type('application/rss+xml').send(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Prof. Chairul Huda — Pusat Ilmu Hukum Pidana</title><link>${siteOrigin}</link><description>Karya, pemikiran, dan bacaan hukum pidana terbaru.</description><language>id</language>${items}</channel></rss>`);
 });
 app.use((req,res)=>render(res,'notice','Halaman tidak ditemukan',{heading:'Halaman tidak ditemukan',text:'Kembali ke beranda atau jelajahi pustaka ilmu pidana.'},404));
 app.use((err,req,res,next)=>{
   if(err instanceof multer.MulterError)return render(res,'notice','Unggahan belum berhasil',{heading:'Periksa dokumen Anda',text:'Unggah satu berkas PDF, DOCX, PPTX, MP4, atau MP3 dengan ukuran maksimal 100 MB.'},400);
-  console.error(err.message);
+  console.error(err.stack||err.message);
   render(res,'notice','Terjadi kendala',{heading:'Halaman belum dapat dimuat',text:'Silakan coba kembali. Jika masih terjadi, hubungi pengelola.'},500);
 });
 app.listen(Number(process.env.PORT)||3000,'0.0.0.0',()=>console.info('Chairul Huda website listening on configured port'));
