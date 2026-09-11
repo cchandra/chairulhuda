@@ -126,7 +126,7 @@ app.post('/simpan/:id',loginRequired,(req,res)=>{
   db.prepare(exists?'DELETE FROM bookmarks WHERE user_id=? AND material_id=?':'INSERT INTO bookmarks(user_id,material_id) VALUES(?,?)').run(req.user.id,material.id);
   res.redirect(`/pustaka/${material.slug}`);
 });
-app.get('/tentang',(req,res)=>render(res,'about','Tentang Prof. Chairul Huda',{structuredData:jsonLd({'@context':'https://schema.org','@type':'Person',name:'Chairul Huda',jobTitle:'Ahli Hukum Pidana dan Akademisi',url:siteOrigin+'/tentang',image:siteOrigin+'/chairul-huda-2025.jpg',sameAs:['https://www.mkri.id/berita/ahli-pemohon-pasal-21-uu-tipikor-perlu-dirumuskan-ulang-23921'],description:'Ahli hukum pidana dan akademisi, dikenal atas teori pemisahan tindak pidana dan pertanggungjawaban pidana.'})}));
+app.get('/tentang',(req,res)=>render(res,'about','Tentang Prof. Chairul Huda',{structuredData:jsonLd({'@context':'https://schema.org','@type':'Person',name:'Chairul Huda',jobTitle:'Ahli Hukum Pidana dan Akademisi',url:siteOrigin+'/tentang',image:siteOrigin+'/chairul-huda-2025.jpg',sameAs:['https://www.mkri.id/berita/ahli-pemohon:-pasal-21-uu-tipikor-perlu-dirumuskan-ulang-23921'],description:'Ahli hukum pidana dan akademisi, dikenal atas teori pemisahan tindak pidana dan pertanggungjawaban pidana.'})}));
 app.get('/kelas',(req,res)=>render(res,'classes','Kelas & Diskusi',{materials:db.prepare(`SELECT ${listColumns} FROM materials WHERE status='published' AND kind='Kelas' ORDER BY id DESC`).all()}));
 app.get('/profesional',(req,res)=>render(res,'professional','Akses Profesional untuk Lawyer'));
 app.get('/layanan',(req,res)=>render(res,'services','Layanan Ahli'));
