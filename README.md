@@ -14,6 +14,10 @@ npm start
 
 Open `http://localhost:3000`. Native `node:sqlite` is used; no external database service is required for one Node process. Data persists in `DATA_DIR`, defaulting to `./data`. Back up the entire data directory, including uploads. Do not run multiple application replicas against separate copies of this directory.
 
+## Closed preview gate
+
+The entire site currently requires a shared HTTP Basic Auth password (`SITE_PASSWORD`, default `chairulhuda`) before anything renders, and every page sends `noindex,nofollow` while `robots.txt` disallows all crawling. This is a temporary pre-launch gate, not member authentication — it sits in front of the whole app, including public pages. Only `/health` and `/robots.txt` are exempt, so uptime checks and crawlers can still resolve those. Before public launch: remove the gate middleware in `server.mjs`, restore the real `robots.txt`/sitemap `Disallow` rules, and drop the unconditional `noindex` meta tag in `views/layout.ejs`.
+
 ## Deployment on Hostinger Node.js hosting
 
 1. Import GitHub repository `cchandra/chairulhuda`, branch `main` as a Node.js application.

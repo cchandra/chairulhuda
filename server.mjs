@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import compression from 'compression';
-import { randomBytes, createHash } from 'node:crypto';
+import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { openSync, readSync, closeSync, unlinkSync } from 'node:fs';
 import { join, basename, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,6 +16,19 @@ const siteOrigin = validBase || 'http://localhost:3000';
 app.disable('x-powered-by');
 app.set('view engine','ejs');
 app.set('views',join(root,'views'));
+// Site-wide preview gate: the site is not yet approved for public/search visibility.
+// Every request needs the shared preview password, except uptime and crawler-control checks.
+const sitePassword = process.env.SITE_PASSWORD || 'chairulhuda';
+app.use((req,res,next)=>{
+  if(req.path==='/health'||req.path==='/robots.txt') return next();
+  const provided=Buffer.from((req.headers.authorization||'').replace(/^Basic /,''),'base64').toString().split(':').slice(1).join(':');
+  const a=Buffer.from(provided),b=Buffer.from(sitePassword);
+  if(a.length!==b.length||!timingSafeEqual(a,b)){
+    res.set('WWW-Authenticate','Basic realm="Pratinjau Chairul Huda"');
+    return res.status(401).type('text').send('Situs ini dalam pratinjau tertutup. Masukkan kata sandi pratinjau untuk melanjutkan.');
+  }
+  next();
+});
 app.use((req,res,next)=>{
   res.set({'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','X-Frame-Options':'DENY','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'",'Permissions-Policy':'camera=(), microphone=(), geolocation=()'});
   if(production) res.set('Strict-Transport-Security','max-age=31536000');
@@ -214,7 +227,7 @@ app.post('/admin/permintaan/:id',adminRequired,(req,res)=>{
   db.prepare('UPDATE inquiries SET status=? WHERE id=?').run(status,req.params.id);res.redirect('/admin#permintaan');
 });
 app.get('/health',(req,res)=>{db.prepare('SELECT 1').get();res.json({status:'ok'});});
-app.get('/robots.txt',(req,res)=>res.type('text').send(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /akun\nDisallow: /masuk\nDisallow: /daftar\nSitemap: ${siteOrigin}/sitemap.xml`));
+app.get('/robots.txt',(req,res)=>res.type('text').send('User-agent: *\nDisallow: /'));
 app.get('/sitemap.xml',(req,res)=>{
   const staticPaths=['/','/karya','/tentang','/pustaka','/kelas','/profesional','/layanan'];
   const materials=db.prepare("SELECT slug,updated_at FROM materials WHERE status='published'").all();

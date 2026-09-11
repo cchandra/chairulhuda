@@ -10,10 +10,11 @@ test('public routes, membership isolation, uploads, editorial approval and persi
   const dir=mkdtempSync(join(tmpdir(),'chairulhuda-test-'));
   const port=await new Promise(resolve=>{const s=createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p));});});
   const base=`http://127.0.0.1:${port}`;
+  const gate='Basic '+Buffer.from(':preview-test-password').toString('base64');
   let child;
   let log='';
   const launch=async()=>{
-    child=spawn(process.execPath,['server.mjs'],{cwd:process.cwd(),env:{...process.env,NODE_ENV:'test',DATA_DIR:dir,PORT:String(port),BASE_URL:base,ADMIN_EMAIL:'editor@example.test',ADMIN_PASSWORD:'Secure-editor-2026!'}});
+    child=spawn(process.execPath,['server.mjs'],{cwd:process.cwd(),env:{...process.env,NODE_ENV:'test',DATA_DIR:dir,PORT:String(port),BASE_URL:base,ADMIN_EMAIL:'editor@example.test',ADMIN_PASSWORD:'Secure-editor-2026!',SITE_PASSWORD:'preview-test-password'}});
     child.stderr.on('data',d=>log+=d.toString());
     for(let i=0;i<80;i++){try{if((await fetch(base+'/health')).ok)return;}catch{}await new Promise(r=>setTimeout(r,50));}
     throw new Error('Server did not start: '+log);
@@ -21,8 +22,9 @@ test('public routes, membership isolation, uploads, editorial approval and persi
   const stop=async()=>{if(child&&child.exitCode===null){const done=new Promise(r=>child.once('exit',r));child.kill('SIGTERM');await done;}};
   t.after(async()=>{await stop();rmSync(dir,{recursive:true,force:true});});
   await launch();
-  const get=(path,cookie='')=>fetch(base+path,{headers:cookie?{Cookie:cookie}:{},redirect:'manual'});
-  const post=(path,data,cookie='',origin=base)=>fetch(base+path,{method:'POST',headers:{Origin:origin,...(cookie?{Cookie:cookie}:{})},body:new URLSearchParams(data),redirect:'manual'});
+  assert.equal((await fetch(base+'/')).status,401);
+  const get=(path,cookie='')=>fetch(base+path,{headers:{Authorization:gate,...(cookie?{Cookie:cookie}:{})},redirect:'manual'});
+  const post=(path,data,cookie='',origin=base)=>fetch(base+path,{method:'POST',headers:{Authorization:gate,Origin:origin,...(cookie?{Cookie:cookie}:{})},body:new URLSearchParams(data),redirect:'manual'});
   let admin,member,premiumSlug;
   await t.test('all public pages render, search and 404 work',async()=>{
     for(const path of ['/','/karya','/tentang','/pustaka','/kelas','/profesional','/layanan','/privasi','/masuk','/daftar']){
@@ -53,7 +55,7 @@ test('public routes, membership isolation, uploads, editorial approval and persi
   const upload=async(data)=>{
     const form=new FormData();Object.entries(data).forEach(([k,v])=>form.set(k,v));
     form.set('attachment',new Blob(['%PDF-1.4\nPrivate test document'],{type:'application/pdf'}),'private.pdf');
-    return fetch(base+'/admin/materi',{method:'POST',headers:{Origin:base,Cookie:admin},body:form,redirect:'manual'});
+    return fetch(base+'/admin/materi',{method:'POST',headers:{Authorization:gate,Origin:base,Cookie:admin},body:form,redirect:'manual'});
   };
   const material={title:'Premium test material',summary:'Ringkasan publik',body:'UNIQUE_PRIVATE_CONTENT_1287',topic:'Pidana Korporasi',kind:'Makalah',access:'premium',status:'published',author:'Tim Editorial'};
   await t.test('publishing requires review and premium content cannot leak',async()=>{
@@ -78,13 +80,13 @@ test('public routes, membership isolation, uploads, editorial approval and persi
   await t.test('private video streams support seeking and reject expired members',async()=>{
     const form=new FormData();Object.entries({...material,title:'Kelas video uji',kind:'Kelas',reviewed:'yes'}).forEach(([k,v])=>form.set(k,v));
     form.set('attachment',new Blob([Buffer.from([0,0,0,24]),'ftypisom00000000'],{type:'video/mp4'}),'lesson.mp4');
-    assert.equal((await fetch(base+'/admin/materi',{method:'POST',headers:{Origin:base,Cookie:admin},body:form,redirect:'manual'})).status,302);
+    assert.equal((await fetch(base+'/admin/materi',{method:'POST',headers:{Authorization:gate,Origin:base,Cookie:admin},body:form,redirect:'manual'})).status,302);
     assert.equal((await get('/media/5',member)).status,403);
-    const stream=await fetch(base+'/media/5',{headers:{Cookie:admin,Range:'bytes=0-7'}});
+    const stream=await fetch(base+'/media/5',{headers:{Authorization:gate,Cookie:admin,Range:'bytes=0-7'}});
     assert.equal(stream.status,206);assert.equal((await stream.arrayBuffer()).byteLength,8);
     const invalid=new FormData();Object.entries({...material,reviewed:'yes'}).forEach(([k,v])=>invalid.set(k,v));
     invalid.set('attachment',new Blob(['<html>not a document</html>'],{type:'application/pdf'}),'invalid.pdf');
-    assert.equal((await fetch(base+'/admin/materi',{method:'POST',headers:{Origin:base,Cookie:admin},body:invalid,redirect:'manual'})).status,400);
+    assert.equal((await fetch(base+'/admin/materi',{method:'POST',headers:{Authorization:gate,Origin:base,Cookie:admin},body:invalid,redirect:'manual'})).status,400);
   });
   await t.test('bookmarks and inquiries persist and output is escaped',async()=>{
     await post('/simpan/1',{},member);
